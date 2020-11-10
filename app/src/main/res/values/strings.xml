@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Scheduling</string>
+    <string name="menu_schedule">Calendar</string>
+    <string name="menu_new">New</string>
+    <string name="menu_analytics">Analytics</string>
+    <string name="back">BACK</string>
+</resources>
