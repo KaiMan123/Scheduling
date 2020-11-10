@@ -13,8 +13,12 @@ public class TaskRepo {
     public TaskRepo(Application application) {
         TaskDB db = TaskDB.getDatabase(application);
         mtaskDB = db.taskDao();;
-        Calendar calendar = Time.getTime();
-        mtaskDB.checkPass(calendar.getTimeInMillis(), "passed", new String[]{"finished", "start"});
+        Calendar c_day = Time.getDate();
+        Calendar c_time = Time.getTime();
+        int hourOfDay = c_time.get(Calendar.HOUR_OF_DAY);
+        int minute = c_time.get(Calendar.MINUTE);
+        int time = hourOfDay * 100 + minute;
+        mtaskDB.checkPass(c_day.getTimeInMillis(), time, "passed", new String[]{"finished", "start"});
     }
 
     public List<List<Long>> getAllTasks() {

@@ -74,7 +74,7 @@ public class ShortTaskActivity extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        select_date.setText(Time.date2string(day, month+1, year));
+        select_date.setText(Time.date2string(day, month, year));
 
         select_from = (Button) findViewById(R.id.select_from);
         select_to = (Button) findViewById(R.id.select_to);
@@ -155,14 +155,14 @@ public class ShortTaskActivity extends AppCompatActivity {
                 nTask.day = Time.string2format(select_date.getText().toString());
                 nTask.day_from = nTask.day;
                 nTask.day_to = nTask.day;
-                nTask.time_from = "";
-                nTask.time_to = "";
+                nTask.time_from = -1;
+                nTask.time_to = -1;
                 if(is_fullday.isChecked()){
-                    nTask.time_from = "0000";
-                    nTask.time_to = "2400";
+                    nTask.time_from = 0;
+                    nTask.time_to = 2400;
                 }else{
-                    nTask.time_from = select_from.getText().toString();
-                    nTask.time_to = select_to.getText().toString();
+                    nTask.time_from = Time.string2time(select_from.getText().toString());
+                    nTask.time_to = Time.string2time(select_to.getText().toString());
                 }
                 nTask.repeat = -1;
                 nTask.repeat_unit = -1;

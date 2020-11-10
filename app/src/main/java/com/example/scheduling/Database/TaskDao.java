@@ -27,8 +27,8 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks WHERE day = (:date)")
     List<Task> getByDay(Long date);
 
-    @Query("UPDATE tasks SET status = (:status) WHERE day < (:date) AND status NOT IN (:exception)")
-    void checkPass(Long date, String status, String[] exception);
+    @Query("UPDATE tasks SET status = (:status) WHERE (day < (:date) OR (day == (:date) AND time_to < (:time))) AND status NOT IN (:exception)")
+    void checkPass(Long date, Integer time, String status, String[] exception);
 
     @Insert
     void insertAll(List<Task> tasks);

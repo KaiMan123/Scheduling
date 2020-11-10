@@ -150,16 +150,14 @@ public class LongTaskActivity extends AppCompatActivity {
                 nTask.day = 0L;
                 nTask.day_from = Time.string2format(select_date_from.getText().toString());
                 nTask.day_to = Time.string2format(select_date_to.getText().toString());
-                nTask.time_from = "";
-                nTask.time_to = "";
-                if(is_specific.isChecked()){
-                    if(is_fullday.isChecked()){
-                        nTask.time_from = "0000";
-                        nTask.time_to = "2400";
-                    }else{
-                        nTask.time_from = select_from.getText().toString();
-                        nTask.time_to = select_to.getText().toString();
-                    }
+                nTask.time_from = -1;
+                nTask.time_to = -1;
+                if(is_fullday.isChecked()){
+                    nTask.time_from = 0;
+                    nTask.time_to = 2400;
+                }else{
+                    nTask.time_from = Time.string2time(select_from.getText().toString());
+                    nTask.time_to = Time.string2time(select_to.getText().toString());
                 }
                 nTask.repeat = -1;
                 nTask.repeat_unit = -1;

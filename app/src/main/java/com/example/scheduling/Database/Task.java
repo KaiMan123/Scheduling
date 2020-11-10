@@ -33,10 +33,10 @@ public class Task  {
     public Long day_to;
 
     @ColumnInfo(name = "time_from")
-    public String time_from;
+    public Integer time_from;
 
     @ColumnInfo(name = "time_to")
-    public String time_to;
+    public Integer time_to;
 
     @ColumnInfo(name = "repeat")
     public Integer repeat;

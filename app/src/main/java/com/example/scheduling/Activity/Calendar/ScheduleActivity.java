@@ -95,12 +95,12 @@ public class ScheduleActivity extends Fragment {
                 time_str += "\n";
             }
 
-            if(day_task.get(i).time_to.isEmpty()){
+            if(day_task.get(i).time_to == -1){
                 time_str += "NOT SET";
-            } else if (day_task.get(i).time_to.equals("2400")){
+            } else if (day_task.get(i).time_to == 2400){
                 time_str += "FULL DAY";
             } else {
-                time_str += day_task.get(i).time_from + " : " + day_task.get(i).time_to;
+                time_str += String.format("%04d : %04d", day_task.get(i).time_from, day_task.get(i).time_to);
             }
             card_time.setText(time_str);
 

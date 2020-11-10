@@ -10,7 +10,7 @@ import androidx.room.migration.Migration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class}, version = 5, exportSchema = false)
+@Database(entities = {Task.class}, version = 6, exportSchema = false)
 public abstract class TaskDB extends RoomDatabase {
     public abstract TaskDao taskDao();
     private static volatile TaskDB INSTANCE;

@@ -99,4 +99,10 @@ public class Time {
         int[] date_arary = {day, month, year};
         return date_arary;
     }
+
+    public static int string2time(String str) {
+        String[] splited_1 = str.split("\\s+");
+        String[] splited_2 = splited_1[0].split(":");
+        return Integer.parseInt(splited_2[0]) * 100 + Integer.parseInt(splited_2[1]);
+    }
 }
