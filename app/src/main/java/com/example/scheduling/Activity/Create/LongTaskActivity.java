@@ -32,6 +32,7 @@ import com.example.scheduling.utils.Time;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -141,6 +142,16 @@ public class LongTaskActivity extends AppCompatActivity {
                     Toast.makeText(LongTaskActivity.this, "To Date is required!", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if(!is_fullday.isChecked()){
+                    if(select_from.getText().toString().isEmpty()) {
+                        Toast.makeText(LongTaskActivity.this, "From Time is required!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(select_to.getText().toString().isEmpty()) {
+                        Toast.makeText(LongTaskActivity.this, "To Time is required!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 Task nTask = new Task();
                 nTask.id = UUID.randomUUID().toString();
                 nTask.type = "long";
@@ -198,39 +209,74 @@ public class LongTaskActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     public void dateFromPicker(View v){
-        Calendar calendar = Time.getDate();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int[] date;
+        if(select_date_from.getText().toString().isEmpty()) {
+            Calendar calendar = Time.getDate();
+            date = new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)};
+        }else{
+            date = Time.string2date(select_date_from.getText().toString());
+        }
         new DatePickerDialog(v.getContext(), 16973948, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
+                if(!select_date_to.getText().toString().isEmpty()) {
+                    Long from_date = Time.date2format(day, month, year);
+                    Long to_date = Time.string2format(select_date_to.getText().toString());
+                    if(from_date > to_date){
+                        Toast.makeText(LongTaskActivity.this, "From Date should be smaller than the To Date!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 String dateTime = Time.date2string(day, month, year);
                 select_date_from.setText(dateTime);
             }
 
-        }, year, month, day).show();
+        }, date[0], date[1], date[2]).show();
     }
 
     @SuppressLint("ResourceType")
     public void dateToPicker(View v){
-        Calendar calendar = Time.getDate();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int[] date;
+        if(select_date_to.getText().toString().isEmpty()) {
+            if(select_date_from.getText().toString().isEmpty()) {
+                Calendar calendar = Time.getDate();
+                date = new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)};
+            }else{
+                date = Time.string2date(select_date_from.getText().toString());
+            }
+        }else{
+            date = Time.string2date(select_date_to.getText().toString());
+        }
         new DatePickerDialog(v.getContext(), 16973948, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
+                if(!select_date_from.getText().toString().isEmpty()) {
+                    Long from_date = Time.string2format(select_date_from.getText().toString());
+                    Long to_date = Time.date2format(day, month, year);
+                    if(from_date > to_date){
+                        Toast.makeText(LongTaskActivity.this, "To Date should be greater than the From Date!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 String dateTime = Time.date2string(day, month, year);
                 select_date_to.setText(dateTime);
             }
 
-        }, year, month, day).show();
+        }, date[0], date[1], date[2]).show();
     }
 
     public void fromPicker(View v){
         Calendar initCal = Time.getTime();
+        int hr;
+        int min;
+        if(select_from.getText().toString().isEmpty()) {
+            hr = initCal.get(Calendar.HOUR_OF_DAY);
+            min = initCal.get(Calendar.MINUTE);
+        }else{
+            int time_from = Time.string2time(select_from.getText().toString());
+            hr = time_from / 100;
+            min = time_from % 100;
+        }
         new TimePickerDialog(v.getContext(), 16973948, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -238,14 +284,38 @@ public class LongTaskActivity extends AppCompatActivity {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 String time = DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
+                if(!select_to.getText().toString().isEmpty()) {
+                    int from_time = Time.string2time(time);
+                    int to_time = Time.string2time(select_to.getText().toString());
+                    if(from_time > to_time){
+                        Toast.makeText(LongTaskActivity.this, "From Time should be smaller than the To Time!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 select_from.setText(time);
             }
 
-        }, initCal.get(Calendar.HOUR_OF_DAY), initCal.get(Calendar.MINUTE), true).show();
+        }, hr, min, true).show();
     }
 
     public void toPicker(View v){
         Calendar initCal = Time.getTime();
+        int hr;
+        int min;
+        if(select_to.getText().toString().isEmpty()) {
+            if(select_from.getText().toString().isEmpty()) {
+                hr = initCal.get(Calendar.HOUR_OF_DAY);
+                min = initCal.get(Calendar.MINUTE);
+            }else{
+                int time_from = Time.string2time(select_from.getText().toString());
+                hr = time_from / 100;
+                min = time_from % 100;
+            }
+        }else{
+            int time_to = Time.string2time(select_to.getText().toString());
+            hr = time_to / 100;
+            min = time_to % 100;
+        }
         new TimePickerDialog(v.getContext(), 16973948, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -253,13 +323,18 @@ public class LongTaskActivity extends AppCompatActivity {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 String time = DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
-                System.out.println(calendar.getTimeZone());
-                System.out.println(calendar.getTime());
-                System.out.println("===========================================");
+                if(!select_from.getText().toString().isEmpty()) {
+                    int from_time = Time.string2time(select_from.getText().toString());
+                    int to_time = Time.string2time(time);
+                    if(from_time > to_time){
+                        Toast.makeText(LongTaskActivity.this, "To Time should be greater than the From Time!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 select_to.setText(time);
             }
 
-        }, initCal.get(Calendar.HOUR_OF_DAY), initCal.get(Calendar.MINUTE), true).show();
+        }, hr, min, true).show();
     }
 
     public void goCreate() {

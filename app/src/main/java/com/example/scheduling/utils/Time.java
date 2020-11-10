@@ -103,6 +103,10 @@ public class Time {
     public static int string2time(String str) {
         String[] splited_1 = str.split("\\s+");
         String[] splited_2 = splited_1[0].split(":");
-        return Integer.parseInt(splited_2[0]) * 100 + Integer.parseInt(splited_2[1]);
+        int unit = 0;
+        if(splited_1[1].equals("PM")){
+            unit = 1200;
+        }
+        return Integer.parseInt(splited_2[0]) * 100 + Integer.parseInt(splited_2[1]) + unit;
     }
 }
